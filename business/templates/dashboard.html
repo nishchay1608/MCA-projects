@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-tachometer-alt"></i> Business Analytics Dashboard</h2>
+        <p class="text-muted">Real-time business insights and analytics</p>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('manage_customers') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-users"></i> Manage Customers
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('manage_products') }}" class="btn btn-success w-100">
+                            <i class="fas fa-box"></i> Manage Products
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('manage_sales') }}" class="btn btn-info w-100">
+                            <i class="fas fa-shopping-cart"></i> Manage Sales
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('manage_expenses') }}" class="btn btn-warning w-100">
+                            <i class="fas fa-money-bill"></i> Manage Expenses
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics -->
+<div class="row mt-4">
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title" id="totalRevenue">$0.00</h4>
+                        <p class="card-text">Total Revenue</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-dollar-sign fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title" id="totalSales">0</h4>
+                        <p class="card-text">Total Sales</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title" id="totalCustomers">0</h4>
+                        <p class="card-text">Customers</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title" id="totalProducts">0</h4>
+                        <p class="card-text">Products</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-box fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Sales</h5>
+            </div>
+            <div class="card-body">
+                <div id="recentSales">
+                    <p class="text-muted">Loading recent sales...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Top Products</h5>
+            </div>
+            <div class="card-body">
+                <div id="topProducts">
+                    <p class="text-muted">Loading top products...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load dashboard data when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
+});
+
+function loadDashboardData() {
+    fetch('/api/dashboard_stats')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update metrics
+                document.getElementById('totalRevenue').textContent = '$' + parseFloat(data.total_revenue).toFixed(2);
+                document.getElementById('totalSales').textContent = data.total_sales;
+                document.getElementById('totalCustomers').textContent = data.total_customers;
+                document.getElementById('totalProducts').textContent = data.total_products;
+                
+                // Update recent sales
+                if (data.recent_sales && data.recent_sales.length > 0) {
+                    let salesHtml = '<div class="list-group">';
+                    data.recent_sales.forEach(sale => {
+                        salesHtml += `
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Sale #${sale.sale_id}</h6>
+                                    <small>$${parseFloat(sale.total_amount).toFixed(2)}</small>
+                                </div>
+                                <p class="mb-1">${sale.product_name} - Qty: ${sale.quantity}</p>
+                                <small>Date: ${sale.sale_date}</small>
+                            </div>
+                        `;
+                    });
+                    salesHtml += '</div>';
+                    document.getElementById('recentSales').innerHTML = salesHtml;
+                }
+                
+                // Update top products
+                if (data.top_products && data.top_products.length > 0) {
+                    let productsHtml = '<div class="list-group">';
+                    data.top_products.forEach(product => {
+                        productsHtml += `
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">${product.product_name}</h6>
+                                    <small>$${parseFloat(product.total_revenue).toFixed(2)}</small>
+                                </div>
+                                <p class="mb-1">Sold: ${product.total_units} units</p>
+                                <small>Category: ${product.category}</small>
+                            </div>
+                        `;
+                    });
+                    productsHtml += '</div>';
+                    document.getElementById('topProducts').innerHTML = productsHtml;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error loading dashboard data:', error);
+        });
+}
+</script>
+{% endblock %}

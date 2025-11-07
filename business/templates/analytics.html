@@ -1,0 +1,599 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-chart-line"></i> Business Analytics</h2>
+        <p class="text-muted">Comprehensive insights into your business performance</p>
+    </div>
+</div>
+
+<!-- Overview Metrics -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Business Overview</h5>
+            </div>
+            <div class="card-body">
+                <div id="overviewMetrics" class="row text-center">
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h4 id="todayRevenue">$0.00</h4>
+                                <small>Today's Revenue</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h4 id="monthRevenue">$0.00</h4>
+                                <small>This Month Revenue</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">
+                                <h4 id="monthExpenses">$0.00</h4>
+                                <small>This Month Expenses</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body">
+                                <h4 id="monthProfit">$0.00</h4>
+                                <small>This Month Profit</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h4 id="totalCustomers">0</h4>
+                                <small>Total Customers</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="card bg-secondary text-white">
+                            <div class="card-body">
+                                <h4 id="totalProducts">0</h4>
+                                <small>Total Products</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row 1 -->
+<div class="row mt-4">
+    <!-- Revenue vs Expenses Trend -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Revenue vs Expenses Trend</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="revenueExpensesChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profit/Loss Overview -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Profit/Loss Overview</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="profitChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row 2 -->
+<div class="row mt-4">
+    <!-- Sales Over Time -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Sales Over Time</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="salesTrendChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Expense Trends -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Expense Trends</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="expenseTrendChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row 3 -->
+<div class="row mt-4">
+    <!-- Top Products -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Top Selling Products</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="topProductsChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Customer Insights -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Top Customers</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="topCustomersChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Tables -->
+<div class="row mt-4">
+    <!-- Quick Stats -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 col-6 mb-3">
+                        <h3 class="text-success" id="totalRevenue">$0.00</h3>
+                        <small class="text-muted">Total Revenue</small>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <h3 class="text-danger" id="totalExpenses">$0.00</h3>
+                        <small class="text-muted">Total Expenses</small>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <h3 class="text-primary" id="netProfit">$0.00</h3>
+                        <small class="text-muted">Net Profit</small>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <h3 class="text-info" id="profitMargin">0%</h3>
+                        <small class="text-muted">Profit Margin</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Global chart instances
+let charts = {};
+
+// Load all analytics data when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Loading analytics data...');
+    loadOverviewMetrics();
+    loadSalesOverTime();
+    loadExpenseTrends();
+    loadProfitability();
+    loadTopProducts();
+    loadCustomerInsights();
+});
+
+// Load Overview Metrics
+function loadOverviewMetrics() {
+    fetch('/api/analytics/overview_metrics')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const m = data.metrics;
+                
+                // Update overview cards
+                document.getElementById('todayRevenue').textContent = `$${m.today_revenue.toFixed(2)}`;
+                document.getElementById('monthRevenue').textContent = `$${m.current_month_revenue.toFixed(2)}`;
+                document.getElementById('monthExpenses').textContent = `$${m.current_month_expenses.toFixed(2)}`;
+                document.getElementById('monthProfit').textContent = `$${m.current_month_profit.toFixed(2)}`;
+                document.getElementById('totalCustomers').textContent = m.total_customers;
+                document.getElementById('totalProducts').textContent = m.total_products;
+                
+                // Update quick stats
+                document.getElementById('totalRevenue').textContent = `$${m.total_revenue.toFixed(2)}`;
+                document.getElementById('totalExpenses').textContent = `$${m.total_expenses.toFixed(2)}`;
+                document.getElementById('netProfit').textContent = `$${m.net_profit.toFixed(2)}`;
+                
+                // Calculate profit margin
+                const profitMargin = m.total_revenue > 0 ? ((m.net_profit / m.total_revenue) * 100) : 0;
+                document.getElementById('profitMargin').textContent = `${profitMargin.toFixed(1)}%`;
+            }
+        })
+        .catch(error => console.error('Error loading overview metrics:', error));
+}
+
+// Load Sales Over Time
+function loadSalesOverTime() {
+    fetch('/api/analytics/sales_over_time')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.monthly_sales) {
+                createSalesTrendChart(data.monthly_sales);
+            }
+        })
+        .catch(error => console.error('Error loading sales over time:', error));
+}
+
+// Load Expense Trends
+function loadExpenseTrends() {
+    fetch('/api/analytics/expense_trends')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.monthly_expenses) {
+                createExpenseTrendChart(data.monthly_expenses);
+            }
+        })
+        .catch(error => console.error('Error loading expense trends:', error));
+}
+
+// Load Profitability Data
+function loadProfitability() {
+    fetch('/api/analytics/profitability')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.monthly_data) {
+                createProfitabilityCharts(data.monthly_data);
+            }
+        })
+        .catch(error => console.error('Error loading profitability data:', error));
+}
+
+// Load Top Products
+function loadTopProducts() {
+    fetch('/api/analytics/top_products')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.top_products) {
+                createTopProductsChart(data.top_products);
+            }
+        })
+        .catch(error => console.error('Error loading top products:', error));
+}
+
+// Load Customer Insights
+function loadCustomerInsights() {
+    fetch('/api/analytics/customer_insights')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.top_customers) {
+                createTopCustomersChart(data.top_customers);
+            }
+        })
+        .catch(error => console.error('Error loading customer insights:', error));
+}
+
+// Chart Creation Functions
+function createSalesTrendChart(monthlySales) {
+    const ctx = document.getElementById('salesTrendChart').getContext('2d');
+    
+    if (charts.salesTrend) {
+        charts.salesTrend.destroy();
+    }
+    
+    charts.salesTrend = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: monthlySales.map(item => item.month),
+            datasets: [{
+                label: 'Sales Revenue',
+                data: monthlySales.map(item => parseFloat(item.total_sales || 0)),
+                borderColor: '#28a745',
+                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Transactions',
+                data: monthlySales.map(item => item.transaction_count || 0),
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                tension: 0.4,
+                fill: true,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Sales Revenue ($)'
+                    }
+                },
+                y1: {
+                    beginAtZero: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Number of Transactions'
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+function createExpenseTrendChart(monthlyExpenses) {
+    const ctx = document.getElementById('expenseTrendChart').getContext('2d');
+    
+    if (charts.expenseTrend) {
+        charts.expenseTrend.destroy();
+    }
+    
+    charts.expenseTrend = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: monthlyExpenses.map(item => item.month),
+            datasets: [{
+                label: 'Total Expenses',
+                data: monthlyExpenses.map(item => parseFloat(item.total_expenses || 0)),
+                backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                borderColor: '#dc3545',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Expenses ($)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function createProfitabilityCharts(monthlyData) {
+    // Revenue vs Expenses Chart
+    const revExpCtx = document.getElementById('revenueExpensesChart').getContext('2d');
+    
+    if (charts.revenueExpenses) {
+        charts.revenueExpenses.destroy();
+    }
+    
+    charts.revenueExpenses = new Chart(revExpCtx, {
+        type: 'line',
+        data: {
+            labels: monthlyData.map(item => item.month),
+            datasets: [{
+                label: 'Revenue',
+                data: monthlyData.map(item => parseFloat(item.revenue || 0)),
+                borderColor: '#28a745',
+                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Expenses',
+                data: monthlyData.map(item => parseFloat(item.expenses || 0)),
+                borderColor: '#dc3545',
+                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount ($)'
+                    }
+                }
+            }
+        }
+    });
+    
+    // Profit Chart
+    const profitCtx = document.getElementById('profitChart').getContext('2d');
+    
+    if (charts.profit) {
+        charts.profit.destroy();
+    }
+    
+    const profitData = monthlyData.map(item => parseFloat(item.net_profit || 0));
+    const backgroundColors = profitData.map(value => 
+        value >= 0 ? 'rgba(40, 167, 69, 0.8)' : 'rgba(220, 53, 69, 0.8)'
+    );
+    
+    charts.profit = new Chart(profitCtx, {
+        type: 'bar',
+        data: {
+            labels: monthlyData.map(item => item.month),
+            datasets: [{
+                label: 'Net Profit/Loss',
+                data: profitData,
+                backgroundColor: backgroundColors,
+                borderColor: backgroundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Profit/Loss ($)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function createTopProductsChart(topProducts) {
+    const ctx = document.getElementById('topProductsChart').getContext('2d');
+    
+    if (charts.topProducts) {
+        charts.topProducts.destroy();
+    }
+    
+    // Limit to top 8 products for better visualization
+    const displayProducts = topProducts.slice(0, 8);
+    
+    charts.topProducts = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: displayProducts.map(item => item.product_name),
+            datasets: [{
+                label: 'Units Sold',
+                data: displayProducts.map(item => item.total_sold || 0),
+                backgroundColor: 'rgba(0, 123, 255, 0.8)',
+                borderColor: '#007bff',
+                borderWidth: 1
+            }, {
+                label: 'Revenue ($)',
+                data: displayProducts.map(item => parseFloat(item.total_revenue || 0)),
+                backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                borderColor: '#28a745',
+                borderWidth: 1,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Products'
+                    }
+                },
+                y1: {
+                    beginAtZero: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Revenue ($)'
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+function createTopCustomersChart(topCustomers) {
+    const ctx = document.getElementById('topCustomersChart').getContext('2d');
+    
+    if (charts.topCustomers) {
+        charts.topCustomers.destroy();
+    }
+    
+    // Limit to top 8 customers for better visualization
+    const displayCustomers = topCustomers.slice(0, 8);
+    
+    charts.topCustomers = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: displayCustomers.map(item => item.customer_name),
+            datasets: [{
+                data: displayCustomers.map(item => parseFloat(item.total_spent || 0)),
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                    '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `$${parseFloat(context.parsed).toFixed(2)}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Refresh all data
+function refreshAnalytics() {
+    console.log('Refreshing analytics data...');
+    loadOverviewMetrics();
+    loadSalesOverTime();
+    loadExpenseTrends();
+    loadProfitability();
+    loadTopProducts();
+    loadCustomerInsights();
+}
+
+// Auto-refresh every 5 minutes
+setInterval(refreshAnalytics, 300000);
+</script>
+
+<style>
+.card {
+    margin-bottom: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 600;
+}
+
+.metric-card {
+    transition: transform 0.2s;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}
